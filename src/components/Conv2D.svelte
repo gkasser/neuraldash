@@ -2,9 +2,8 @@
 	import NextBlock from './NextBlock.svelte';
 </script>
 
-<div class="conv2d">
-	<NextBlock />
-</div>
+<div class="conv2d" />
+<NextBlock />
 <slot />
 
 <style>

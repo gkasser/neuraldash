@@ -18,6 +18,10 @@
 			<svelte:self tree={child} />
 		{/each}
 	</svelte:component>
-	<!-- {json(tree)} -->
-	<!-- <svelte:self {...file}/> -->
 </div>
+
+<style>
+	.tree {
+		flex-grow: 1;
+	}
+</style>
