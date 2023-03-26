@@ -1,12 +1,17 @@
 <script>
 	import Panel from '../components/Panel.svelte';
+	import { state } from '../components/state';
 	import Tree from '../components/Tree.svelte';
-	import tree from '../example.json';
+	import deftree from '../example.json';
+	$: tree = deftree;
+	state.subscribe((s) => {
+		tree = s.tree;
+	});
 </script>
 
 <svelte:head>
 	<title>NeuralDash</title>
-	<meta name="description" content="Make Neural Networks" />
+	<meta name="description" content="Think Fast !" />
 </svelte:head>
 
 <section>
@@ -17,7 +22,7 @@
 <style>
 	section {
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		flex: 0.6;
