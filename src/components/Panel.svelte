@@ -12,7 +12,7 @@
 		selected_index = idx;
 		state.update((s) => {
 			s.tree.children.push({
-				type: 'conv2d',
+				type: filtered[selected_index][1],
 				params: {},
 				children: []
 			});

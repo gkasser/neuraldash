@@ -1,18 +1,27 @@
 <script lang="ts">
 	import Conv2D from './Conv2D.svelte';
 	import Input from './Input.svelte';
+	import Layer from './Layer.svelte';
 	import type { Block } from './state';
 
 	export let tree: Block;
 
 	const registry = {
-		input: Input,
-		conv2d: Conv2D
+		Input: Input,
+		Conv2D: Conv2D,
+		default: Layer
+	};
+
+	const getComponent = (type: string) => {
+		if (type in registry) {
+			return registry[type];
+		}
+		return registry.default;
 	};
 </script>
 
 <div class="tree">
-	<svelte:component this={registry[tree['type']]}>
+	<svelte:component this={getComponent(tree['type'])} type={tree['type']}>
 		{#each tree['children'] as child}
 			<svelte:self tree={child} />
 		{/each}

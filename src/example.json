@@ -1,42 +1,7 @@
 {
-    "type": "input",
+    "type": "Input",
     "params": {
         "size": "b,x,x,3"
     },
-    "children": [
-        {
-            "type": "conv2d",
-            "params": {
-                "filters": 32,
-                "kernel_size": 3
-            },
-            "children": [
-                {
-                    "type": "conv2d",
-                    "params": {
-                        "filters": 32,
-                        "kernel_size": 3
-                    },
-                    "children": [
-                        {
-                            "type": "conv2d",
-                            "params": {
-                                "filters": 32,
-                                "kernel_size": 3
-                            },
-                            "children": []
-                        },
-                        {
-                            "type": "conv2d",
-                            "params": {
-                                "filters": 32,
-                                "kernel_size": 3
-                            },
-                            "children": []
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
+    "children": []
 }

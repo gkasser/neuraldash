@@ -2,7 +2,7 @@ import { writable } from 'svelte/store'
 
 export const state = writable({
     tree: {
-        "type": "input",
+        "type": "Input",
         "params": {
             "size": "b,x,x,3"
         },
