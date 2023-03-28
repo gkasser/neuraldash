@@ -1,5 +1,7 @@
 import { writable } from 'svelte/store'
 
+export const position = writable([0])
+
 export const state = writable({
     tree: {
         "type": "Input",
@@ -7,9 +9,14 @@ export const state = writable({
             "size": "b,x,x,3"
         },
         "inputs": []
-    } as Block,
-    position: [0]
+    } as Block
 })
+
+export type panels = 'navigation' | 'params' | 'search'
+
+export const activeBlock = writable<panels>('navigation')
+
+export const pendingBlock = writable<Block | undefined>()
 
 export type Block = {
     type: string

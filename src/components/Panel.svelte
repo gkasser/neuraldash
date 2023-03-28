@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import layers from '../layers.json';
-	import { state } from './state';
+	import { state, activeBlock } from './state';
 	const all_keys = Object.keys(layers).map((key) => [key.toLowerCase(), key]);
 	$: searched = '';
 	$: filtered = all_keys.filter(
@@ -8,30 +9,46 @@
 	);
 	$: selected_index = 0;
 
+	let searchBar: HTMLInputElement;
+
+	onMount(() => {
+		activeBlock.subscribe((a) => {
+			if (a == 'search') {
+				searchBar.focus();
+			}
+		});
+	});
+
 	const addElement = (idx) => {
 		selected_index = idx;
-		state.update((s) => {
-			s.tree.children.push({
-				type: filtered[selected_index][1],
-				params: {},
-				children: []
+		if (filtered.length > selected_index) {
+			activeBlock.set('params');
+
+			state.update((s) => {
+				s.tree.children.push({
+					type: filtered[selected_index][1],
+					params: {},
+					children: []
+				});
+				return s;
 			});
-			return s;
-		});
+		}
 	};
 
-	function onKeyDown(e) {
-		switch (e.keyCode) {
-			// up = 38
-			case 38:
+	function onKeyDown(e: KeyboardEvent) {
+		switch (e.code) {
+			case 'ArrowUp':
 				selected_index--;
 				break;
-			// down = 40
-			case 40:
+			case 'ArrowDown':
 				selected_index++;
 				break;
 
-			case 13:
+			case 'Escape':
+				activeBlock.set('navigation');
+				break;
+
+			case 'Enter':
 				addElement(selected_index);
 		}
 		selected_index = Math.max(Math.min(selected_index, filtered.length), 0);
@@ -39,7 +56,13 @@
 </script>
 
 <div class="panel">
-	<input class="searchbar" bind:value={searched} on:keydown={onKeyDown} />
+	<input
+		class="searchbar"
+		bind:this={searchBar}
+		bind:value={searched}
+		on:keydown={onKeyDown}
+		on:click={() => activeBlock.set('search')}
+	/>
 	<ul>
 		{#each filtered as layer_key, i}
 			<li class={i == selected_index ? 'selected' : ''} on:click={() => addElement(i)}>

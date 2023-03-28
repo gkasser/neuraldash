@@ -1,7 +1,7 @@
 <script>
 	import Panel from '../components/Panel.svelte';
 	import Params from '../components/Params.svelte';
-	import { state } from '../components/state';
+	import { activeBlock, state } from '../components/state';
 	import Tree from '../components/Tree.svelte';
 	import deftree from '../example.json';
 	$: tree = deftree;
@@ -16,6 +16,7 @@
 </svelte:head>
 
 <section>
+	{$activeBlock}
 	<Panel />
 	<Tree {tree} />
 	<Params params={['Bordel']} />
