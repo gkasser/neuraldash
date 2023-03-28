@@ -6,7 +6,7 @@ export const state = writable({
         "params": {
             "size": "b,x,x,3"
         },
-        "children": []
+        "inputs": []
     } as Block,
     position: [0]
 })
@@ -14,5 +14,5 @@ export const state = writable({
 export type Block = {
     type: string
     params: any
-    children: Array<Block>
+    inputs: Array<Block>
 }

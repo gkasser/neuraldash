@@ -3,5 +3,5 @@
     "params": {
         "size": "b,x,x,3"
     },
-    "children": []
+    "inputs": []
 }

@@ -1,14 +1,14 @@
 <script lang="ts">
-	import Conv2D from './Conv2D.svelte';
-	import Input from './Input.svelte';
+	// import Conv2D from './Conv2D.svelte';
+	// import Input from './Input.svelte';
 	import Layer from './Layer.svelte';
 	import type { Block } from './state';
 
 	export let tree: Block;
 
 	const registry = {
-		Input: Input,
-		Conv2D: Conv2D,
+		// Input: Input,
+		// Conv2D: Conv2D,
 		default: Layer
 	};
 
@@ -22,7 +22,7 @@
 
 <div class="tree">
 	<svelte:component this={getComponent(tree['type'])} type={tree['type']}>
-		{#each tree['children'] as child}
+		{#each tree['inputs'] as child}
 			<svelte:self tree={child} />
 		{/each}
 	</svelte:component>
