@@ -1,71 +1,75 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import layers from '../layers.json';
-	import { state, activeBlock } from './state';
+	import { state, activeBlock, position } from './state';
 	const all_keys = Object.keys(layers).map((key) => [key.toLowerCase(), key]);
-	$: searched = '';
+	$: searchText = '';
 	$: filtered = all_keys.filter(
-		(entry) => !searched || entry[0].indexOf(searched.toLowerCase()) >= 0
+		(entry) => !searchText || entry[0].indexOf(searchText.toLowerCase()) >= 0
 	);
-	$: selected_index = 0;
+	$: selectedIndex = 0;
 
 	let searchBar: HTMLInputElement;
 
+	let desc = '';
+
 	onMount(() => {
 		activeBlock.subscribe((a) => {
-			if (a == 'search') {
+			if (a.position == 'search') {
 				searchBar.focus();
 			}
+			desc += a.position + '\n';
 		});
 	});
 
-	const addElement = (idx) => {
-		selected_index = idx;
-		if (filtered.length > selected_index) {
-			activeBlock.set('params');
-
+	const addElement = (idx: number) => {
+		selectedIndex = idx;
+		if (filtered.length > selectedIndex) {
+			activeBlock.set({ position: 'params' });
 			state.update((s) => {
-				s.tree.children.push({
-					type: filtered[selected_index][1],
+				s.tree.inputs.push({
+					type: filtered[selectedIndex][1],
 					params: {},
-					children: []
+					inputs: []
 				});
 				return s;
 			});
 		}
 	};
 
-	function onKeyDown(e: KeyboardEvent) {
+	function onKeyUp(e: KeyboardEvent) {
 		switch (e.code) {
 			case 'ArrowUp':
-				selected_index--;
+				selectedIndex--;
 				break;
+
 			case 'ArrowDown':
-				selected_index++;
+				selectedIndex++;
 				break;
 
 			case 'Escape':
-				activeBlock.set('navigation');
+				activeBlock.set({ position: 'navigation' });
 				break;
 
 			case 'Enter':
-				addElement(selected_index);
+				addElement(selectedIndex);
 		}
-		selected_index = Math.max(Math.min(selected_index, filtered.length), 0);
+		selectedIndex = Math.max(Math.min(selectedIndex, filtered.length), 0);
 	}
 </script>
 
-<div class="panel">
+<div class="panel" on:focus={() => activeBlock.set({ position: 'search' })}>
+	{desc}
 	<input
 		class="searchbar"
 		bind:this={searchBar}
-		bind:value={searched}
-		on:keydown={onKeyDown}
-		on:click={() => activeBlock.set('search')}
+		bind:value={searchText}
+		on:keyup={onKeyUp}
+		on:click={() => activeBlock.set({ position: 'search' })}
 	/>
 	<ul>
 		{#each filtered as layer_key, i}
-			<li class={i == selected_index ? 'selected' : ''} on:click={() => addElement(i)}>
+			<li class={i == selectedIndex ? 'selected' : ''} on:click={() => addElement(i)}>
 				{layer_key[1]}
 			</li>
 		{/each}

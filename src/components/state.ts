@@ -14,7 +14,7 @@ export const state = writable({
 
 export type panels = 'navigation' | 'params' | 'search'
 
-export const activeBlock = writable<panels>('navigation')
+export const activeBlock = writable<{ position: panels }>({ position: 'navigation' })
 
 export const pendingBlock = writable<Block | undefined>()
 

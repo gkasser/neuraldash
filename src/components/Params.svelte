@@ -6,21 +6,27 @@
 	let firstParam: HTMLElement;
 
 	const addNewBlock = () => {
-		activeBlock.set('search');
+		activeBlock.set({ position: 'search' });
 	};
 
 	onMount(() => {
 		activeBlock.subscribe((s) => {
-			if (s == 'params') {
+			if (s.position == 'params') {
 				firstParam.focus();
 				params[0] = 'FUCKING FIOCUSDS';
 			}
 		});
 	});
 
+	let shit = '';
 	const onKeyUp = (e: KeyboardEvent) => {
 		if (e.code == 'Escape') {
-			activeBlock.set('search');
+			shit = e.code;
+			activeBlock.update(() => {
+				return {
+					position: 'search'
+				};
+			});
 		} else if (e.code == 'Enter') {
 			addNewBlock();
 		}
@@ -29,6 +35,7 @@
 
 <div class="params_bar" on:keyup={onKeyUp}>
 	<!-- close -->
+	{shit}
 	{#each params as param, i}
 		<label for={param}>{param}</label>
 		{#if i == 0}

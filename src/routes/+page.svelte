@@ -1,13 +1,13 @@
 <script>
-	import Panel from '../components/Panel.svelte';
+	import SearchPanel from '../components/Search.svelte';
 	import Params from '../components/Params.svelte';
 	import { activeBlock, state } from '../components/state';
 	import Tree from '../components/Tree.svelte';
 	import deftree from '../example.json';
 	$: tree = deftree;
-	state.subscribe((s) => {
-		tree = s.tree;
-	});
+	// state.subscribe((s) => {
+	// 	tree = s.tree;
+	// });
 </script>
 
 <svelte:head>
@@ -17,7 +17,7 @@
 
 <section>
 	{$activeBlock}
-	<Panel />
+	<SearchPanel />
 	<Tree {tree} />
 	<Params params={['Bordel']} />
 </section>
