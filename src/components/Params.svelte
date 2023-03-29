@@ -33,18 +33,20 @@
 	};
 </script>
 
-<div class="params_bar" on:keyup={onKeyUp}>
-	<!-- close -->
-	{shit}
-	{#each params as param, i}
-		<label for={param}>{param}</label>
-		{#if i == 0}
-			<input bind:this={firstParam} bind:value={params[i]} tabindex={i + 1} id={param} />
-		{:else}
-			<input bind:value={params[i]} tabindex={i + 1} id={param} />
-		{/if}
-	{/each}
-</div>
+{#if $activeBlock.position == 'params'}
+	<div class="params_bar" on:keyup={onKeyUp}>
+		<!-- close -->
+		{shit}
+		{#each params as param, i}
+			<label for={param}>{param}</label>
+			{#if i == 0}
+				<input bind:this={firstParam} bind:value={params[i]} tabindex={i + 1} id={param} />
+			{:else}
+				<input bind:value={params[i]} tabindex={i + 1} id={param} />
+			{/if}
+		{/each}
+	</div>
+{/if}
 
 <style>
 	.params_bar {
@@ -56,5 +58,6 @@
 		left: 270px;
 		right: 15px;
 		bottom: 15px;
+		z-index: 10;
 	}
 </style>

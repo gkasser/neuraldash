@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import layers from '../layers.json';
-	import { state, activeBlock, position } from './state';
+	import { activeBlock } from './state';
 	const all_keys = Object.keys(layers).map((key) => [key.toLowerCase(), key]);
 	$: searchText = '';
 	$: filtered = all_keys.filter(
@@ -89,6 +89,7 @@
 		padding: 15px;
 		border-radius: 7px;
 		border: solid 1px #ccc;
+		z-index: 10;
 	}
 
 	ul {

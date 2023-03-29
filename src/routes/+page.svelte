@@ -1,13 +1,10 @@
-<script>
+<script lang="ts">
 	import SearchPanel from '../components/Search.svelte';
 	import Params from '../components/Params.svelte';
-	import { activeBlock, state } from '../components/state';
 	import Tree from '../components/Tree.svelte';
-	import deftree from '../example.json';
-	$: tree = deftree;
-	// state.subscribe((s) => {
-	// 	tree = s.tree;
-	// });
+
+	let width;
+	let height;
 </script>
 
 <svelte:head>
@@ -15,21 +12,21 @@
 	<meta name="description" content="Think Fast !" />
 </svelte:head>
 
-<section>
-	{$activeBlock}
+<div bind:clientWidth={width} bind:clientHeight={height}>
 	<SearchPanel />
-	<Tree {tree} />
+
+	<Tree {height} {width} />
 	<Params params={['Bordel']} />
-</section>
+</div>
 
 <style>
-	section {
+	div {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		flex: 0.6;
-		height: 90vh;
-		width: 90vw;
+		height: 100%;
+		width: 100%;
 	}
 </style>

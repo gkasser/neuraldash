@@ -1,35 +1,31 @@
 <script lang="ts">
-	// import Conv2D from './Conv2D.svelte';
-	// import Input from './Input.svelte';
-	import Layer from './Layer.svelte';
-	import type { Block } from './state';
+	import Params from './Params.svelte';
+	import { Canvas, Layer } from 'svelte-canvas';
+	import type { Render } from 'svelte-canvas';
+	import { Draw } from './draw';
 
-	export let tree: Block;
+	export let width: number;
+	export let height: number;
 
-	const registry = {
-		// Input: Input,
-		// Conv2D: Conv2D,
-		default: Layer
-	};
+	$: render = ({
+		context,
+		width,
+		height
+	}: {
+		context: CanvasRenderingContext2D;
+		width: number;
+		height: number;
+	}) => {
+		context.fillStyle = `hsl(${10 / 40}, 100%, 50%)`;
+		context.beginPath();
+		context.arc(150, 100, 100, 0, Math.PI * 2);
+		context.fill();
 
-	const getComponent = (type: string) => {
-		if (type in registry) {
-			return registry[type];
-		}
-		return registry.default;
+		const b = new Draw(1, 0, 0, context, width, height);
+		b.drawBlock({}, { x: 360, y: 200 });
 	};
 </script>
 
-<div class="tree">
-	<svelte:component this={getComponent(tree['type'])} type={tree['type']}>
-		{#each tree['inputs'] as child}
-			<svelte:self tree={child} />
-		{/each}
-	</svelte:component>
-</div>
-
-<style>
-	.tree {
-		flex-grow: 1;
-	}
-</style>
+<Canvas {width} {height}>
+	<Layer {render} />
+</Canvas>
