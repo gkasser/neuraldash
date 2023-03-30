@@ -33,6 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"dagre": "^0.8.5",
 		"svelte-canvas": "^0.9.3"
 	}
 }

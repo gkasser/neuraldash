@@ -11,8 +11,10 @@ export type INode = {
 }
 
 export type IEdge = {
+    id: string,
     from: string,
     to: string,
+    label?: string
 }
 
 export type ITree = {
