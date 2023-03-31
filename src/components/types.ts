@@ -1,7 +1,10 @@
 
 export type IBlock = {
-    type: string
-    params: { [name: string]: any }
+    height: number
+    label: string
+    width: number
+    x: number
+    y: number
 }
 
 export type INode = {

@@ -1,10 +1,7 @@
 <script lang="ts">
-	import { deltaTime } from './state.ts';
-	import Params from './Params.svelte';
 	import { Canvas, Layer } from 'svelte-canvas';
-	import type { Render } from 'svelte-canvas';
 	import { Draw } from './draw';
-	import { time } from './state';
+	import { currentLayout } from './state';
 
 	export let width: number;
 	export let height: number;
@@ -18,16 +15,15 @@
 		width: number;
 		height: number;
 	}) => {
-		context.fillStyle = `hsl(${10 / 40}, 100%, 50%)`;
-		context.beginPath();
-		context.arc(150, 100, 100, 0, Math.PI * 2);
-		context.fill();
+		const b = new Draw(1, 300, 50, context, width, height);
 
-		const b = new Draw(1, 0, 0, context, width, height);
+		$currentLayout.nodes.forEach((n) => {
+			b.drawBlock(n);
+		});
 
-		b.drawBlock({}, { x: 360, y: 200 });
-		b.write($time.toString(), { x: 300, y: 300 });
-		b.write($deltaTime.toString(), { x: 300, y: 350 });
+		$currentLayout.edges.forEach(({ points }) => {
+			b.drawLine(points);
+		});
 	};
 </script>
 
