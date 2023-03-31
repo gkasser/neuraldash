@@ -68,9 +68,14 @@ export class Draw {
 
         this.fillRect(p1c, p2c)
 
+        this.write("Hello World!", { x: p1c.x, y: pc.y })
+    }
+
+    write(text: string, p: Point) {
+        const pc = this.convertPoint(p)
         this.ctx.font = "20px Georgia"
         this.ctx.fillStyle = 'black'
-        this.ctx.fillText("Hello World!", p1c.x, pc.y)
+        this.ctx.fillText(text, pc.x, pc.y)
     }
 
 }

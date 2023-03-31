@@ -1,7 +1,7 @@
 
 export type IBlock = {
     type: string
-    params: any[]
+    params: { [name: string]: any }
 }
 
 export type INode = {
