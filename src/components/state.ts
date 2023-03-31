@@ -2,7 +2,7 @@ import { derived, writable } from 'svelte/store'
 import type { IBlock, IEdge, ITree, INode } from './types'
 import { t } from 'svelte-canvas'
 
-export const times = writable([0, 0])
+const times = writable([0, 0])
 
 t.subscribe((_time) => {
     times.update((vals) => {
@@ -19,7 +19,7 @@ export const deltaTime = derived(times, ($times) => {
     return $times[1]
 })
 
-export const position = writable([0])
+export const selectedIds = writable<string[]>([])
 
 const currentAvailableId = writable<number>(0)
 export const getId = () => {
@@ -97,6 +97,9 @@ const initGraph = () => {
         }
     }
 
+    const id1 = addNode(block1)
+    const id2 = addNode(block2)
 
+    const edge = addEdge(id1, id2, 'Arrow')
 
 }
