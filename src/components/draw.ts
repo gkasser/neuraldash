@@ -53,7 +53,7 @@ export class Draw {
 
     drawLine(points: Point[]) {
         while (points.length >= 2) {
-            const p1 = points.shift()
+            const p1 = points.shift()!
             const p2 = points[0]
 
             this.link(p1, p2)
@@ -66,7 +66,6 @@ export class Draw {
         const h = b.height
         const p = { x: b.x, y: b.y }
 
-        const pc = this.convertPoint(p)
 
         const p1 = {
             x: p.x - w / 2,
