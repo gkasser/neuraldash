@@ -1,7 +1,7 @@
 import { derived, writable } from 'svelte/store'
 import type { IArrow, ILayer } from './types'
 import dagre from 'dagre'
-import type { Layer } from 'svelte-canvas'
+// import type { Layer } from 'svelte-canvas'
 
 
 
@@ -50,7 +50,7 @@ export class GraphApi {
 
     }
 
-    public addLayerAfter(newLayer: Omit<ILayer, "nodeId">, connectedLayer: Layer): void {
+    public addLayerAfter(newLayer: Omit<ILayer, "nodeId">, connectedLayerId: string): string {
         const nodeId: string = GraphApi.getId()
         this.layers.update(
             (ls) => {
@@ -60,17 +60,19 @@ export class GraphApi {
         )
 
         this.addArrow({
-            fromId: connectedLayer.nodeId,
+            fromId: connectedLayerId,
             toId: nodeId
         })
+        return nodeId
     }
 
-    public addLayer(layer: Omit<ILayer, "nodeId">): void {
+    public addLayer(layer: Omit<ILayer, "nodeId">): string {
+        const nodeId = GraphApi.getId()
         this.layers.update((ls) => {
-            const nodeId = GraphApi.getId()
             ls.push({ ...layer, nodeId })
             return ls
         })
+        return nodeId
     }
 
     public removeLayer(layer: ILayer): void {
@@ -90,12 +92,13 @@ export class GraphApi {
     }
 
 
-    public addArrow(arrow: Omit<IArrow, "edgeId">): void {
+    public addArrow(arrow: Omit<IArrow, "edgeId">): string {
+        const edgeId = GraphApi.getId()
         this.arrows.update((ls) => {
-            const edgeId = GraphApi.getId()
             ls.push({ ...arrow, edgeId })
             return ls
         })
+        return edgeId
     }
 
     public removeArrow(arrow: IArrow): void {
@@ -113,5 +116,4 @@ export class GraphApi {
             return ls
         })
     }
-
 }

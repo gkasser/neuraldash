@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Canvas, Layer } from 'svelte-canvas';
 	import { Draw } from './draw';
-	import { currentNodes, currentEdges } from './state';
+	import { currentLayers, currentArrows } from './state';
 
 	export let width: number;
 	export let height: number;
@@ -17,7 +17,7 @@
 	}) => {
 		const b = new Draw(1, 300, 50, context, width, height);
 
-		$currentNodes.forEach((n) => {
+		$currentLayers.forEach((n) => {
 			b.drawBlock(n);
 		});
 

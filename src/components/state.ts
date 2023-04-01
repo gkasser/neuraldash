@@ -1,15 +1,14 @@
-import { derived, writable, get } from 'svelte/store'
+import { writable, get } from 'svelte/store'
 import type { ILayer, INode } from './types'
 import { deltaTime } from './time'
 import { GraphApi } from './graphApi'
 
 export const graphApi = new GraphApi()
-
 export const targetLayout = graphApi.targetLayout
 
-export const currentNodes = writable(get(targetLayout).nodes)
 
-export const currentEdges = writable(get(targetLayout).edges)
+export const currentLayers = writable(get(graphApi.layers))
+export const currentArrows = writable(get(graphApi.arrows))
 
 // export const targetNodes = derived(targetLayout, ($cl) => {
 //     return $cl.nodes
@@ -25,8 +24,8 @@ deltaTime.subscribe((dt) => {
     if (get(timeToMove) <= 0) return
     timeToMove.update((ttm) => ttm - dt)
 
-    const currentNs = get(currentNodes)
-    const currentEs = get(currentEdges)
+    const currentNs = get(currentLayers)
+    const currentEs = get(currentArrows)
 
     const targetNs = get(targetLayout).nodes
     const targetEs = get(targetLayout).edges
@@ -43,9 +42,7 @@ deltaTime.subscribe((dt) => {
         equivalent.y += (node.y - equivalent.y) * 4. * dt
     })
 
-    currentNodes.set(currentNs)
-
-
+    currentLayers.set(currentNs)
 })
 
 
@@ -60,7 +57,7 @@ export const pendingBlock = writable<INode | undefined>()
 
 export const selectedIds = writable<string[]>([])
 
-const newLayer = (name: string, params: any): Omit<ILayer, 'nodeId'> => {
+const newLayer = (name: string, params: any = {}): Omit<ILayer, 'nodeId'> => {
     return {
         name,
         params
@@ -70,11 +67,8 @@ const newLayer = (name: string, params: any): Omit<ILayer, 'nodeId'> => {
 const initGraph = () => {
     const block1 = newLayer("Input")
     const block2 = newLayer("Conv2D")
-    graphApi.addLayer(block1)
-    graphApi.addLayer(block2)
-
-    graphApi.addArrow(block1, block2)
-
+    const id1 = graphApi.addLayer(block1)
+    graphApi.addLayerAfter(block2, id1)
 }
 
 setTimeout(initGraph, 50)
@@ -86,7 +80,7 @@ setInterval(() => {
         label: 'ksdd'
     })
 
-    const ns = get(currentNodes)
+    const ns = get(currentLayers)
     const n1 = ns[Math.floor(Math.random() * ns.length)]
 
     addEdge(n1.label, nId)
