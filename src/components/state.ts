@@ -1,5 +1,5 @@
 import { derived, writable, get } from 'svelte/store'
-import type { IBlock } from './types'
+import type { INode } from './types'
 import dagre from 'dagre'
 import { deltaTime } from './time'
 
@@ -60,7 +60,7 @@ deltaTime.subscribe((dt) => {
         // Find missing nodes
         let equivalent = currentNs.find((n) => n.label == node.label)
         if (!equivalent) {
-            equivalent = { ...node, x: -300, y: 300 }
+            equivalent = { ...node }
             currentNs.push(equivalent)
         }
 
@@ -74,7 +74,7 @@ deltaTime.subscribe((dt) => {
 })
 
 
-export const addNode = (b: IBlock) => {
+export const addNode = (b: INode) => {
     const id = getId()
 
     g.setNode(id, { label: id, width: b.width, height: b.height })
@@ -106,28 +106,28 @@ export type panels = 'navigation' | 'params' | 'search'
 
 export const activeBlock = writable<{ position: panels }>({ position: 'navigation' })
 
-export const pendingBlock = writable<IBlock | undefined>()
+export const pendingBlock = writable<INode | undefined>()
 
 export const selectedIds = writable<string[]>([])
 
+const newNode = (name: string): INode => {
+    return {
+        height: 100,
+        width: 150,
+        label: name,
+        x: -300,
+        y: 300
+    }
+}
 
 const initGraph = () => {
-    const block1: IBlock = {
-        label: "Input",
-        width: 150,
-        height: 100,
-
-    }
-    const block2: IBlock = {
-        label: "Conv2D",
-        width: 150,
-        height: 100,
-    }
+    const block1 = newNode("Input")
+    const block2 = newNode("Conv2D")
 
     const blockId1 = addNode(block1)
     const blockId2 = addNode(block2)
 
-    const edgeId = addEdge(blockId1, blockId2, 'Arrow')
+    const edgeId = addEdge(blockId1, blockId2)
 
     selectedIds.set([edgeId])
 }

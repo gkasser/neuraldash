@@ -1,5 +1,5 @@
 
-export type IBlock = {
+export type INode = {
     height: number
     label: string
     width: number
@@ -7,21 +7,19 @@ export type IBlock = {
     y: number
 }
 
-export type INode = {
-    id: string,
-    name: string,
-    data: IBlock,
-}
-
 export type IEdge = {
-    id: string,
     from: string,
     to: string,
-    label?: string
+    label: string
 }
 
-export type ITree = {
-    nodes: INode[],
-    edges: IEdge[],
+export type ILayer = {
+    nodeId: string,
+    name: string,
+    params: { [name: string]: any }
 }
 
+export type IArrow = {
+    edgeId: string,
+    text: string,
+}

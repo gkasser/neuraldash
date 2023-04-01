@@ -1,4 +1,4 @@
-import type { IBlock } from './types'
+import type { INode } from './types'
 
 export type Point = { x: number; y: number }
 
@@ -61,7 +61,7 @@ export class Draw {
 
     }
 
-    drawBlock(b: IBlock) {
+    drawBlock(b: INode) {
         const w = b.width
         const h = b.height
         const p = { x: b.x, y: b.y }
