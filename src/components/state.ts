@@ -1,48 +1,23 @@
 import { derived, writable, get } from 'svelte/store'
-import type { INode } from './types'
-import dagre from 'dagre'
+import type { ILayer, INode } from './types'
 import { deltaTime } from './time'
+import { GraphApi } from './graphApi'
 
-const DEFAULT_ANIMATION_TIME = 3
+export const graphApi = new GraphApi()
 
-const currentAvailableId = writable<number>(0)
-const getId = () => {
-    let id = 0
-    currentAvailableId.update(i => {
-        id = i
-        return i + 1
-    })
-    return id.toString()
-}
-
-
-const g = new dagre.graphlib.Graph()
-g.setGraph({})
-g.setDefaultEdgeLabel(function () { return {} })
-
-
-const getLayout = () => {
-    dagre.layout(g)
-    return {
-        nodes: g.nodes().map(nId => g.node(nId)),
-        edges: g.edges().map(eId => g.edge(eId))
-    }
-}
-
-
-export const targetLayout = writable(getLayout())
+export const targetLayout = graphApi.targetLayout
 
 export const currentNodes = writable(get(targetLayout).nodes)
 
 export const currentEdges = writable(get(targetLayout).edges)
 
-export const targetNodes = derived(targetLayout, ($cl) => {
-    return $cl.nodes
-})
+// export const targetNodes = derived(targetLayout, ($cl) => {
+//     return $cl.nodes
+// })
 
-export const targetEdges = derived(targetLayout, ($cl) => {
-    return $cl.edges
-})
+// export const targetEdges = derived(targetLayout, ($cl) => {
+//     return $cl.edges
+// })
 
 export const timeToMove = writable(0)
 
@@ -53,8 +28,8 @@ deltaTime.subscribe((dt) => {
     const currentNs = get(currentNodes)
     const currentEs = get(currentEdges)
 
-    const targetNs = get(targetNodes)
-    const targetEs = get(targetEdges)
+    const targetNs = get(targetLayout).nodes
+    const targetEs = get(targetLayout).edges
 
     targetNs.forEach((node) => {
         // Find missing nodes
@@ -74,31 +49,6 @@ deltaTime.subscribe((dt) => {
 })
 
 
-export const addNode = (b: INode) => {
-    const id = getId()
-
-    g.setNode(id, { label: id, width: b.width, height: b.height })
-
-    targetLayout.set(getLayout())
-
-    timeToMove.set(DEFAULT_ANIMATION_TIME)
-
-    return id
-}
-
-export const addEdge = (blockId1: string, blockId2: string) => {
-    const id = getId()
-
-    g.setEdge(blockId1, blockId2)
-
-    timeToMove.set(DEFAULT_ANIMATION_TIME)
-
-    targetLayout.set(getLayout())
-
-
-    return id
-}
-
 
 
 
@@ -110,26 +60,21 @@ export const pendingBlock = writable<INode | undefined>()
 
 export const selectedIds = writable<string[]>([])
 
-const newNode = (name: string): INode => {
+const newLayer = (name: string, params: any): Omit<ILayer, 'nodeId'> => {
     return {
-        height: 100,
-        width: 150,
-        label: name,
-        x: -300,
-        y: 300
+        name,
+        params
     }
 }
 
 const initGraph = () => {
-    const block1 = newNode("Input")
-    const block2 = newNode("Conv2D")
+    const block1 = newLayer("Input")
+    const block2 = newLayer("Conv2D")
+    graphApi.addLayer(block1)
+    graphApi.addLayer(block2)
 
-    const blockId1 = addNode(block1)
-    const blockId2 = addNode(block2)
+    graphApi.addArrow(block1, block2)
 
-    const edgeId = addEdge(blockId1, blockId2)
-
-    selectedIds.set([edgeId])
 }
 
 setTimeout(initGraph, 50)

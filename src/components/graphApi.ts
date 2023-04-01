@@ -1,6 +1,7 @@
 import { derived, writable } from 'svelte/store'
 import type { IArrow, ILayer } from './types'
 import dagre from 'dagre'
+import type { Layer } from 'svelte-canvas'
 
 
 
@@ -38,23 +39,36 @@ export class GraphApi {
             })
 
             $arrows.forEach(arrow => {
-                g.setEdge(arrow., blockId2)
+                g.setEdge(arrow.fromId, arrow.toId)
             })
-
-
+            dagre.layout(g)
+            return {
+                nodes: g.nodes().map(nId => g.node(nId)),
+                edges: g.edges().map(eId => g.edge(eId))
+            }
         })
 
-
-        dagre.layout(g)
-        return {
-            nodes: g.nodes().map(nId => g.node(nId)),
-            edges: g.edges().map(eId => g.edge(eId))
-        }
     }
 
-    public addLayer(layer: ILayer): void {
+    public addLayerAfter(newLayer: Omit<ILayer, "nodeId">, connectedLayer: Layer): void {
+        const nodeId: string = GraphApi.getId()
+        this.layers.update(
+            (ls) => {
+                ls.push({ ...newLayer, nodeId })
+                return ls
+            }
+        )
+
+        this.addArrow({
+            fromId: connectedLayer.nodeId,
+            toId: nodeId
+        })
+    }
+
+    public addLayer(layer: Omit<ILayer, "nodeId">): void {
         this.layers.update((ls) => {
-            ls.push(layer)
+            const nodeId = GraphApi.getId()
+            ls.push({ ...layer, nodeId })
             return ls
         })
     }
@@ -76,9 +90,10 @@ export class GraphApi {
     }
 
 
-    public addArrow(arrow: IArrow): void {
+    public addArrow(arrow: Omit<IArrow, "edgeId">): void {
         this.arrows.update((ls) => {
-            ls.push(arrow)
+            const edgeId = GraphApi.getId()
+            ls.push({ ...arrow, edgeId })
             return ls
         })
     }

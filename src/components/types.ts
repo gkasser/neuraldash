@@ -21,5 +21,6 @@ export type ILayer = {
 
 export type IArrow = {
     edgeId: string,
-    text: string,
+    fromId: string,
+    toId: string,
 }
