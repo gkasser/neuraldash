@@ -18,10 +18,8 @@
 		});
 	});
 
-	let shit = '';
 	const onKeyUp = (e: KeyboardEvent) => {
 		if (e.code == 'Escape') {
-			shit = e.code;
 			activeBlock.update(() => {
 				return {
 					position: 'search'
@@ -33,20 +31,16 @@
 	};
 </script>
 
-{#if $activeBlock.position == 'params'}
-	<div class="params_bar" on:keyup={onKeyUp}>
-		<!-- close -->
-		{shit}
-		{#each params as param, i}
-			<label for={param}>{param}</label>
-			{#if i == 0}
-				<input bind:this={firstParam} bind:value={params[i]} tabindex={i + 1} id={param} />
-			{:else}
-				<input bind:value={params[i]} tabindex={i + 1} id={param} />
-			{/if}
-		{/each}
-	</div>
-{/if}
+<div class="params_bar" class:visible={$activeBlock.position == 'params'} on:keyup={onKeyUp}>
+	{#each params as param, i}
+		<label for={param}>{param}</label>
+		{#if i == 0}
+			<input bind:this={firstParam} bind:value={params[i]} tabindex={i + 1} id={param} />
+		{:else}
+			<input bind:value={params[i]} tabindex={i + 1} id={param} />
+		{/if}
+	{/each}
+</div>
 
 <style>
 	.params_bar {
@@ -59,5 +53,10 @@
 		right: 15px;
 		bottom: 15px;
 		z-index: 10;
+		display: none;
+	}
+
+	.visible {
+		display: block;
 	}
 </style>

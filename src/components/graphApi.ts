@@ -1,7 +1,7 @@
 import { derived, writable } from 'svelte/store'
-import type { IArrow, ILayer } from './types'
+import type { IArrow, IDrawArrow, IDrawLayer, ILayer } from './types'
 import dagre from 'dagre'
-// import type { Layer } from 'svelte-canvas'
+import { DEFAULT_MOVETIME, timeToMove } from './time'
 
 
 
@@ -19,6 +19,8 @@ export class GraphApi {
             id = i
             return i + 1
         })
+
+        timeToMove.set(DEFAULT_MOVETIME)
         return id.toString()
     }
 
@@ -39,19 +41,38 @@ export class GraphApi {
             })
 
             $arrows.forEach(arrow => {
-                g.setEdge(arrow.fromId, arrow.toId)
+                g.setEdge(arrow.fromId, arrow.toId, {
+                    edgeId: arrow.edgeId
+                })
             })
-            dagre.layout(g)
+
+            try {
+                dagre.layout(g)
+            } catch (e) {
+                console.error(e)
+                return {
+                    layers: [],
+                    arrows: [],
+                }
+            }
+
             return {
-                nodes: g.nodes().map(nId => g.node(nId)),
-                edges: g.edges().map(eId => g.edge(eId))
+                layers: g.nodes().map(nId => {
+                    return { ...g.node(nId), ...$layers.find(l => l.nodeId === nId) }
+                }),
+                arrows: g.edges().map(edge => {
+                    const fullEdge = g.edge(edge)
+                    return { ...fullEdge, ...$arrows.find(a => a.edgeId === fullEdge.edgeId) }
+                })
+            } as {
+                layers: IDrawLayer[],
+                arrows: IDrawArrow[],
             }
         })
-
     }
 
     public addLayerAfter(newLayer: Omit<ILayer, "nodeId">, connectedLayerId: string): string {
-        const nodeId: string = GraphApi.getId()
+        const nodeId = `l${GraphApi.getId()}`
         this.layers.update(
             (ls) => {
                 ls.push({ ...newLayer, nodeId })
@@ -67,7 +88,7 @@ export class GraphApi {
     }
 
     public addLayer(layer: Omit<ILayer, "nodeId">): string {
-        const nodeId = GraphApi.getId()
+        const nodeId = `l${GraphApi.getId()}`
         this.layers.update((ls) => {
             ls.push({ ...layer, nodeId })
             return ls
@@ -93,7 +114,7 @@ export class GraphApi {
 
 
     public addArrow(arrow: Omit<IArrow, "edgeId">): string {
-        const edgeId = GraphApi.getId()
+        const edgeId = `a${GraphApi.getId()}`
         this.arrows.update((ls) => {
             ls.push({ ...arrow, edgeId })
             return ls

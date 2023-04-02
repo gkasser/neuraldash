@@ -1,6 +1,5 @@
-import type { INode } from './types'
+import type { INode, Point } from './types'
 
-export type Point = { x: number; y: number }
 
 export class Draw {
     constructor(
@@ -42,7 +41,6 @@ export class Draw {
         this.ctx.strokeStyle = '#333'
         this.lineTo(p2)
         this.ctx.stroke()
-        console.log("draw from ", p1, p1)
     }
 
     fillRect(p1: Point, p2: Point) {

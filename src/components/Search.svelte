@@ -26,14 +26,15 @@
 		selectedIndex = idx;
 		if (filtered.length > selectedIndex) {
 			activeBlock.set({ position: 'params' });
-			state.update((s) => {
-				s.tree.inputs.push({
-					type: filtered[selectedIndex][1],
-					params: {},
-					inputs: []
-				});
-				return s;
-			});
+			// TODO: Add layer
+			// state.update((s) => {
+			// 	s.tree.inputs.push({
+			// 		type: filtered[selectedIndex][1],
+			// 		params: {},
+			// 		inputs: []
+			// 	});
+			// 	return s;
+			// });
 		}
 	};
 

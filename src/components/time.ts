@@ -17,3 +17,7 @@ export const time = derived(times, ($times) => {
 export const deltaTime = derived(times, ($times) => {
     return $times[1]
 })
+
+export const timeToMove = writable(0)
+
+export const DEFAULT_MOVETIME = 3
