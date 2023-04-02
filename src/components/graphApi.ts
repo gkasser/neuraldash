@@ -1,7 +1,6 @@
 import { derived, writable } from 'svelte/store'
 import type { IArrow, IDrawArrow, IDrawLayer, ILayer } from './types'
 import dagre from 'dagre'
-import { DEFAULT_MOVETIME, timeToMove } from './time'
 
 
 
@@ -20,7 +19,6 @@ export class GraphApi {
             return i + 1
         })
 
-        timeToMove.set(DEFAULT_MOVETIME)
         return id.toString()
     }
 

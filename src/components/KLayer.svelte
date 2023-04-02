@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { IDrawLayer } from './types';
+	import { mapOffset } from './state';
 
 	export let x: number;
 	export let y: number;
@@ -10,10 +10,13 @@
 	export let label: string;
 	export let params: { [name: string]: any };
 
+	$: dx = x + $mapOffset.x - width / 2;
+	$: dy = y + $mapOffset.y - height / 2;
+
 	$: style = {
 		width: width + 'px',
 		height: height + 'px',
-		transform: `translate(${x}px, ${y}px)`
+		transform: `translate(${dx}px, ${dy}px)`
 	};
 	$: cssVarStyles = Object.entries(style)
 		.map(([key, value]) => `${key}:${value}`)
@@ -33,6 +36,6 @@
 		border-radius: 7px;
 		box-shadow: 3px 3px 5px 0;
 		position: absolute;
-		transition: 1s ease-in-out;
+		transition: 0.3s ease-in-out;
 	}
 </style>
