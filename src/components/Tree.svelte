@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Point } from './types.ts';
 	import { Canvas, Layer } from 'svelte-canvas';
 	import { Draw } from './draw';
 	import KLayer from './KLayer.svelte';
@@ -23,21 +24,49 @@
 			b.drawLine(points);
 		});
 	};
+
+	$: dragging = null as Point | null;
+
+	const mouseDown = (e: MouseEvent) => {
+		dragging = {
+			x: e.screenX,
+			y: e.screenY
+		};
+	};
+
+	const mouseUp = (e: MouseEvent) => {
+		dragging = null;
+	};
+
+	const mouseMove = (e: MouseEvent) => {
+		if (!!dragging) {
+			mapOffset.update((p) => {
+				p.x += e.screenX - dragging.x;
+				p.y += e.screenY - dragging.y;
+				return p;
+			});
+			dragging = {
+				x: e.screenX,
+				y: e.screenY
+			};
+		}
+	};
 </script>
 
 <Canvas {width} {height}>
 	<Layer {render} />
 </Canvas>
-<div class="box-container" on:mouseout={console.log} on:mousemove={console.log}>
+<div
+	class="box-container"
+	on:mousemove={mouseMove}
+	on:mousedown={mouseDown}
+	on:mouseup={mouseUp}
+	on:mouseout={mouseUp}
+>
 	{#each $targetLayout.layers as cl}
-		<KLayer {...cl} />
+		<KLayer {...cl} dragging={!!dragging} />
 	{/each}
 </div>
-
-<!-- 
-	class:hovering={hoveringOverBasket === basket.name}
-	on:drop={event => drop(event, basketIndex)}
-  ondragover="return false" -->
 
 <style>
 	.box-container {

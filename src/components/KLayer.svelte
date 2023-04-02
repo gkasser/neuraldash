@@ -9,6 +9,7 @@
 	export let name: string;
 	export let label: string;
 	export let params: { [name: string]: any };
+	export let dragging: boolean;
 
 	$: dx = x + $mapOffset.x - width / 2;
 	$: dy = y + $mapOffset.y - height / 2;
@@ -16,7 +17,8 @@
 	$: style = {
 		width: width + 'px',
 		height: height + 'px',
-		transform: `translate(${dx}px, ${dy}px)`
+		transform: `translate(${dx}px, ${dy}px)`,
+		transition: dragging ? 'none' : '0.3s cubic-bezier(0.01, 0.95, 0.26, 1.01)'
 	};
 	$: cssVarStyles = Object.entries(style)
 		.map(([key, value]) => `${key}:${value}`)
@@ -36,6 +38,5 @@
 		border-radius: 7px;
 		box-shadow: 3px 3px 5px 0;
 		position: absolute;
-		transition: 0.3s ease-in-out;
 	}
 </style>

@@ -39,7 +39,7 @@ const initGraph = () => {
 
 setTimeout(initGraph, 1000)
 
-setInterval(() => {
+setTimeout(() => {
     const ns = get(targetLayout).layers
 
     if (ns.length == 0) return
