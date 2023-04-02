@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Point } from './types.ts';
+	import type { Point } from './types';
 	import { Canvas, Layer } from 'svelte-canvas';
 	import { Draw } from './draw';
 	import KLayer from './KLayer.svelte';
@@ -41,8 +41,8 @@
 	const mouseMove = (e: MouseEvent) => {
 		if (!!dragging) {
 			mapOffset.update((p) => {
-				p.x += e.screenX - dragging.x;
-				p.y += e.screenY - dragging.y;
+				p.x += e.screenX - dragging!.x;
+				p.y += e.screenY - dragging!.y;
 				return p;
 			});
 			dragging = {
