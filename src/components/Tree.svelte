@@ -2,7 +2,7 @@
 	import { Canvas, Layer } from 'svelte-canvas';
 	import { Draw } from './draw';
 	import KLayer from './KLayer.svelte';
-	import { currentArrows, currentLayers } from './state';
+	import { currentArrows, currentLayers, mapOffset } from './state';
 
 	export let width: number;
 	export let height: number;
@@ -16,20 +16,11 @@
 		width: number;
 		height: number;
 	}) => {
-		const b = new Draw(1, 300, 50, context, width, height);
+		const { x, y } = $mapOffset;
+		const b = new Draw(1, x, y, context, width, height);
 
 		$currentArrows.forEach(({ points }) => {
 			b.drawLine(points);
-		});
-
-		$currentLayers.forEach((layer) => {
-			b.drawBlock({
-				height: layer.height,
-				width: layer.width,
-				x: layer.x,
-				y: layer.y,
-				label: layer.name
-			});
 		});
 	};
 </script>
@@ -37,6 +28,18 @@
 <Canvas {width} {height}>
 	<Layer {render} />
 </Canvas>
-<!-- {#each $currentLayers as cl}
-	<KLayer {...cl} />
-{/each} -->
+<div class="box-container">
+	{#each $currentLayers as cl}
+		<KLayer {...cl} />
+	{/each}
+</div>
+
+<style>
+	.box-container {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+	}
+</style>

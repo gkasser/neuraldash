@@ -1,5 +1,5 @@
 import { writable, get } from 'svelte/store'
-import type { ILayer, INode } from './types'
+import type { Point, ILayer, INode } from './types'
 import { deltaTime, timeToMove } from './time'
 import { GraphApi } from './graphApi'
 
@@ -10,6 +10,10 @@ export const targetLayout = graphApi.targetLayout
 export const currentLayers = writable(get(graphApi.targetLayout).layers)
 export const currentArrows = writable(get(graphApi.targetLayout).arrows)
 
+export const mapOffset = writable<Point>({
+    x: 300,
+    y: 50,
+})
 
 deltaTime.subscribe((dt) => {
     if (get(timeToMove) <= 0) return
@@ -45,11 +49,7 @@ deltaTime.subscribe((dt) => {
         if (arrow.points[0].x - equivalent.points[0].x == 0 && arrow.points[0].y - equivalent.points[0].y == 0) return
 
         arrow.points.map((p, idx) => {
-            if (equivalent) {
-                console.log(equivalent)
-                while (arrow.points.length > equivalent.points.length) {
-                    equivalent.points.push({ x: 0, y: 0 })
-                }
+            if (equivalent && arrow.points.length == equivalent.points.length) {
                 equivalent.points[idx].x += (arrow.points[idx].x - equivalent.points[idx].x) * 4. * dt
                 equivalent.points[idx].y += (arrow.points[idx].y - equivalent.points[idx].y) * 4. * dt
             }
@@ -63,7 +63,7 @@ deltaTime.subscribe((dt) => {
     currentAs = currentAs.filter(node => !!targetAs.find(t => t.edgeId == node.edgeId))
 
     currentLayers.set(currentNs)
-    currentArrows.set(currentAs)
+    currentArrows.set(targetAs)
 })
 
 
