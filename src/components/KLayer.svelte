@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { derived, get } from 'svelte/store';
+	import { GraphApi } from './graphApi';
 	import { mapOffset } from './state';
 
 	export let x: number;
@@ -11,6 +13,10 @@
 	export let params: { [name: string]: any };
 	export let dragging: boolean;
 
+	$: selected = get(GraphApi.selectedIds).includes(nodeId);
+	GraphApi.selectedIds.subscribe((ids) => {
+		selected = ids.includes(nodeId);
+	});
 	$: dx = x + $mapOffset.x - width / 2;
 	$: dy = y + $mapOffset.y - height / 2;
 
@@ -23,14 +29,21 @@
 	$: cssVarStyles = Object.entries(style)
 		.map(([key, value]) => `${key}:${value}`)
 		.join(';');
+
+	const selectNode = (id: string) => {
+		GraphApi.selectedIds.set([id]);
+	};
 </script>
 
-<div id={nodeId} style={cssVarStyles}>
+<div class="container" id={nodeId} style={cssVarStyles} on:click={() => selectNode(nodeId)}>
 	{name}
+	{#if selected}
+		<div class="connector" />
+	{/if}
 </div>
 
 <style>
-	div {
+	.container {
 		text-align: center;
 		background-color: var(--primary-300);
 		padding: 7px;
@@ -38,5 +51,17 @@
 		border-radius: 7px;
 		box-shadow: 3px 3px 5px 0;
 		position: absolute;
+	}
+
+	.connector {
+		--size: 30px;
+		background-color: var(--accent-100);
+		border-radius: calc(var(--size) / 3);
+		border: solid 1px var(--accent-200);
+		position: absolute;
+		left: calc(50% - var(--size) / 2);
+		bottom: calc(-0.5 * var(--size));
+		width: var(--size);
+		height: var(--size);
 	}
 </style>

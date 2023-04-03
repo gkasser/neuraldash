@@ -1,19 +1,24 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { activeBlock } from './state';
+	import { get } from 'svelte/store';
+	import { activeBlock, graphApi, pendingBlock } from './state';
 
-	export let params: Array<any>;
 	let firstParam: HTMLElement;
 
 	const addNewBlock = () => {
-		activeBlock.set({ position: 'search' });
+		const newBlock = get(pendingBlock);
+		if (newBlock) {
+			graphApi.addLayerAfterCurrent(newBlock);
+			activeBlock.set({ position: 'search' });
+		} else {
+			console.error('No block to add');
+		}
 	};
 
 	onMount(() => {
 		activeBlock.subscribe((s) => {
-			if (s.position == 'params') {
+			if (s.position == 'params' && $pendingBlock && Object.keys($pendingBlock).length) {
 				firstParam.focus();
-				params[0] = 'FUCKING FIOCUSDS';
 			}
 		});
 	});
@@ -29,15 +34,22 @@
 			addNewBlock();
 		}
 	};
+
+	$: keys = $pendingBlock ? Object.keys($pendingBlock) : [];
+	$: res = {
+		...keys.map((k) => {
+			return { [k]: '' };
+		})
+	};
 </script>
 
 <div class="params_bar" class:visible={$activeBlock.position == 'params'} on:keyup={onKeyUp}>
-	{#each params as param, i}
-		<label for={param}>{param}</label>
+	{#each keys as key, i}
+		<label for={key}>{key}</label>
 		{#if i == 0}
-			<input bind:this={firstParam} bind:value={params[i]} tabindex={i + 1} id={param} />
+			<input bind:this={firstParam} bind:value={res[key]} tabindex={i + 1} id={key} />
 		{:else}
-			<input bind:value={params[i]} tabindex={i + 1} id={param} />
+			<input bind:value={res[key]} tabindex={i + 1} id={key} />
 		{/if}
 	{/each}
 </div>

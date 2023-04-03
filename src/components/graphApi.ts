@@ -1,4 +1,4 @@
-import { derived, writable } from 'svelte/store'
+import { derived, get, writable } from 'svelte/store'
 import type { IArrow, IDrawArrow, IDrawLayer, ILayer } from './types'
 import dagre from 'dagre'
 
@@ -9,10 +9,11 @@ export class GraphApi {
     public arrows
     public targetLayout
 
-    blockDimensions = { width: 150, height: 100 }
+    blockDimensions = { width: 120, height: 75 }
 
-    static currentAvailableId = writable<number>(0)
-    public static getId = () => {
+    public static selectedIds = writable<string[]>([])
+    private static currentAvailableId = writable<number>(0)
+    private static getId = () => {
         let id = 0
         GraphApi.currentAvailableId.update(i => {
             id = i
@@ -69,6 +70,11 @@ export class GraphApi {
         })
     }
 
+    public addLayerAfterCurrent(newLayer: Omit<ILayer, "nodeId">): string {
+        const connectedLayerId: string = get(GraphApi.selectedIds)[0]
+        return this.addLayerAfter(newLayer, connectedLayerId)
+    }
+
     public addLayerAfter(newLayer: Omit<ILayer, "nodeId">, connectedLayerId: string): string {
         const nodeId = `l${GraphApi.getId()}`
         this.layers.update(
@@ -82,6 +88,7 @@ export class GraphApi {
             fromId: connectedLayerId,
             toId: nodeId
         })
+        GraphApi.selectedIds.set([nodeId])
         return nodeId
     }
 
@@ -91,6 +98,7 @@ export class GraphApi {
             ls.push({ ...layer, nodeId })
             return ls
         })
+        GraphApi.selectedIds.set([nodeId])
         return nodeId
     }
 
