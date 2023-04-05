@@ -19,7 +19,6 @@ export type panels = 'navigation' | 'params' | 'search'
 
 export const activeBlock = writable<{ position: panels }>({ position: 'navigation' })
 
-export const pendingBlock = writable<Omit<ILayer, 'nodeId'> | undefined>()
 
 const newLayer = (name: string, params: any = {}): Omit<ILayer, 'nodeId'> => {
     return {

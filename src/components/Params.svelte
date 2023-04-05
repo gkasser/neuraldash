@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
-	import { activeBlock, graphApi, pendingBlock } from './state';
+	import { pendingBlock } from './layerApi';
+	import { activeBlock, graphApi } from './state';
 
 	let firstParam: HTMLElement;
 
@@ -35,12 +36,13 @@
 		}
 	};
 
-	$: keys = $pendingBlock ? Object.keys($pendingBlock) : [];
-	$: res = {
-		...keys.map((k) => {
-			return { [k]: '' };
-		})
-	};
+	$: keys = $pendingBlock ? Object.keys($pendingBlock.params) : [];
+	$: res =
+		$pendingBlock && $pendingBlock.params
+			? $pendingBlock.params.map((k) => {
+					return { [k]: '' };
+			  })
+			: [];
 </script>
 
 <div class="params_bar" class:visible={$activeBlock.position == 'params'} on:keyup={onKeyUp}>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import layers from '../layers.json';
-	import { activeBlock } from './state';
+	import { activeBlock, pendingBlock } from './state';
 	const all_keys = Object.keys(layers).map((key) => [key.toLowerCase(), key]);
 	$: searchText = '';
 	$: filtered = all_keys.filter(
@@ -26,15 +26,11 @@
 		selectedIndex = idx;
 		if (filtered.length > selectedIndex) {
 			activeBlock.set({ position: 'params' });
-			// TODO: Add layer
-			// state.update((s) => {
-			// 	s.tree.inputs.push({
-			// 		type: filtered[selectedIndex][1],
-			// 		params: {},
-			// 		inputs: []
-			// 	});
-			// 	return s;
-			// });
+			const layerName = filtered[selectedIndex][1];
+			pendingBlock.set({
+				name: layerName,
+				params: layers[layerName]
+			});
 		}
 	};
 

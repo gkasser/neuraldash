@@ -17,7 +17,12 @@ export type IEdge = {
 export type ILayer = {
     nodeId: string,
     name: string,
-    params: { [name: string]: any }
+    params: {
+        type: "int" | "float" | "string" | "bool" | "tuple" | "Any"
+        name: string
+        doc: string
+        value: any
+    }[]
 }
 
 export type IArrow = {
