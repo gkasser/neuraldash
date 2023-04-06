@@ -19,7 +19,6 @@
 	}) => {
 		const { x, y } = $mapOffset;
 		const b = new Draw(1, x, y, context, width, height);
-
 		$targetLayout.arrows.forEach(({ points }) => {
 			b.drawLine(points);
 		});

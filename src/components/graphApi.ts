@@ -54,7 +54,6 @@ export class GraphApi {
                     arrows: [],
                 }
             }
-
             return {
                 layers: g.nodes().map(nId => {
                     return { ...g.node(nId), ...$layers.find(l => l.nodeId === nId) }

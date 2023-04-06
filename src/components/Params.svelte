@@ -36,30 +36,34 @@
 		}
 	};
 
-	$: keys = $pendingBlock ? $pendingBlock.params.map((p) => p.name) : [];
-	$: res =
-		$pendingBlock && $pendingBlock.params
-			? $pendingBlock.params.map((k) => {
-					return {
-						[k.name]: {
-							doc: k.doc,
-							value: k.value,
-							type: k.type
-						}
-					};
-			  })
-			: [];
+	$: params = $pendingBlock ? $pendingBlock.params : [];
+
+	$: selectedIndex = 0;
+
+	const select = (idx: number) => {
+		selectedIndex = idx;
+		console.log(params[idx]);
+	};
 </script>
 
 <div class="params_bar" class:visible={$activeBlock.position == 'params'} on:keyup={onKeyUp}>
-	{#each keys as key, i}
-		<label for={key}>{key}</label>
+	{#each params as param, i}
+		<label for={param.name}>{param.name}</label>
 		{#if i == 0}
-			<input bind:this={firstParam} bind:value={res[key]} tabindex={i + 1} id={key} />
+			<input
+				on:focus={() => select(i)}
+				bind:this={firstParam}
+				bind:value={param.value}
+				tabindex={i + 1}
+				id={param.name}
+			/>
 		{:else}
-			<input bind:value={res[key]} tabindex={i + 1} id={key} />
+			<input on:focus={() => select(i)} bind:value={$pendingBlock} tabindex={i + 1} />
 		{/if}
 	{/each}
+	<div>
+		{params[selectedIndex]?.doc}
+	</div>
 </div>
 
 <style>

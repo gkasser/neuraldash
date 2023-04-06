@@ -50,9 +50,10 @@ export class Draw {
     }
 
     drawLine(points: Point[]) {
-        while (points.length >= 2) {
-            const p1 = points.shift()!
-            const p2 = points[0]
+        const rep = [...points]
+        while (rep.length >= 2) {
+            const p1 = rep.shift()!
+            const p2 = rep[0]
 
             this.link(p1, p2)
         }
