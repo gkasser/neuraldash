@@ -36,11 +36,17 @@
 		}
 	};
 
-	$: keys = $pendingBlock ? Object.keys($pendingBlock.params) : [];
+	$: keys = $pendingBlock ? $pendingBlock.params.map((p) => p.name) : [];
 	$: res =
 		$pendingBlock && $pendingBlock.params
 			? $pendingBlock.params.map((k) => {
-					return { [k]: '' };
+					return {
+						[k.name]: {
+							doc: k.doc,
+							value: k.value,
+							type: k.type
+						}
+					};
 			  })
 			: [];
 </script>

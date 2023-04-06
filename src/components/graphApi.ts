@@ -61,13 +61,23 @@ export class GraphApi {
                 }),
                 arrows: g.edges().map(edge => {
                     const fullEdge = g.edge(edge)
-                    return { ...fullEdge, ...$arrows.find(a => a.edgeId === fullEdge.edgeId) }
+                    const points = fullEdge.points
+                    return { ...$arrows.find(a => a.edgeId === fullEdge.edgeId), points }
                 })
             } as {
                 layers: IDrawLayer[],
                 arrows: IDrawArrow[],
             }
         })
+
+        const id1 = this.addLayer({
+            name: 'Input', params: []
+        })
+
+        this.addLayerAfter({
+            name: "Conv2D",
+            params: []
+        }, id1)
     }
 
     public addLayerAfterCurrent(newLayer: Omit<ILayer, "nodeId">): string {

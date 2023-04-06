@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import layers from '../layers.json';
-	import { activeBlock, pendingBlock } from './state';
+	import { activeBlock } from './state';
+	import { layerApi } from './layerApi';
 	const all_keys = Object.keys(layers).map((key) => [key.toLowerCase(), key]);
 	$: searchText = '';
 	$: filtered = all_keys.filter(
@@ -27,14 +28,13 @@
 		if (filtered.length > selectedIndex) {
 			activeBlock.set({ position: 'params' });
 			const layerName = filtered[selectedIndex][1];
-			pendingBlock.set({
-				name: layerName,
-				params: layers[layerName]
-			});
+			layerApi.newLayer(layerName);
 		}
 	};
 
 	function onKeyUp(e: KeyboardEvent) {
+		selectedIndex = Math.max(Math.min(selectedIndex, filtered.length), 0);
+
 		switch (e.code) {
 			case 'ArrowUp':
 				selectedIndex--;
