@@ -121,6 +121,28 @@ if __name__ == "__main__":
                     ],
                 }
 
+
+    # dico
+    
+    # "Input": {
+    #     "multipleInputs": false,
+    #     "doc": "",
+    #     "altersShape": false,
+    #     "params": [
+    #         {
+    #             "type": "tuple",
+    #             "name": "shape",
+    #             "doc": "A shape tuple (integers), not including the batch size. For instance, shape=(32,) indicates that the expected input will be batches of 32-dimensional vectors. Elements of this tuple can be None; 'None' elements represent dimensions where the shape is not known."
+    #         }
+    #     ]
+    # },
+    # "Output": {
+    #     "multipleInputs": false,
+    #     "doc": "",
+    #     "altersShape": false,
+    #     "params": []
+    # },
+
     _ = open("./src/layers.json", "w").write(json.dumps(dico, indent=4))
 
     # app_dico = {}

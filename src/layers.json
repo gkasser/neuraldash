@@ -1,4 +1,22 @@
 {
+    "Input": {
+        "multipleInputs": false,
+        "doc": "",
+        "altersShape": false,
+        "params": [
+            {
+                "type": "tuple",
+                "name": "shape",
+                "doc": "A shape tuple (integers), not including the batch size. For instance, shape=(32,) indicates that the expected input will be batches of 32-dimensional vectors. Elements of this tuple can be None; 'None' elements represent dimensions where the shape is not known."
+            }
+        ]
+    },
+    "Output": {
+        "multipleInputs": false,
+        "doc": "",
+        "altersShape": false,
+        "params": []
+    },
     "AbstractRNNCell": {
         "multipleInputs": false,
         "doc": "Abstract object representing an RNN cell\n",
@@ -11,7 +29,7 @@
         "altersShape": true,
         "params": [
             {
-                "type": "Activation function, such as `tf.nn.relu`, or string name of built-in activation function, such as \"relu\"",
+                "type": "Any",
                 "name": "activation",
                 "doc": "Activation function, such as `tf.nn.relu`, or string name of built-in activation function, such as \"relu\""
             }

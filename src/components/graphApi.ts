@@ -176,6 +176,7 @@ export class GraphApi {
             GraphApi.selectedIds.set([parents[0]])
         }
     }
+
     public downArrow() {
         const [currentId, ..._] = get(GraphApi.selectedIds)
         const children = this.nodeChildren(currentId)
