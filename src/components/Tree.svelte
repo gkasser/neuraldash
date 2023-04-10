@@ -3,8 +3,8 @@
 	import { Canvas, Layer } from 'svelte-canvas';
 	import { Draw } from './draw';
 	import KLayer from './KLayer.svelte';
-	import { NavigationAPI, mapOffset, targetLayout } from './state';
-
+	import { mapOffset, targetLayout } from './state';
+	import { NavigationAPI } from './NavigationAPI';
 	export let width: number;
 	export let height: number;
 

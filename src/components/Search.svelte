@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import layers from '../layers.json';
-	import { NavigationAPI, activeBlock } from './state';
+	import { NavigationAPI } from './NavigationAPI';
 	import { layerApi } from './layerApi';
+	import { activeBlock } from './state';
 	const all_keys = Object.keys(layers).map((key) => [key.toLowerCase(), key]);
 	$: searchText = '';
 	$: filtered = all_keys.filter(
@@ -12,23 +13,20 @@
 
 	let searchBar: HTMLInputElement;
 
-	let desc = '';
-
 	onMount(() => {
 		activeBlock.subscribe((a) => {
 			if (a == 'search') {
 				searchBar.focus();
 			}
-			desc += a + '\n';
 		});
 	});
 
 	const addElement = (idx: number) => {
 		selectedIndex = idx;
 		if (filtered.length > selectedIndex) {
-			NavigationAPI.Params();
 			const layerName = filtered[selectedIndex][1];
 			layerApi.newLayer(layerName);
+			NavigationAPI.Params();
 		}
 	};
 
@@ -44,10 +42,6 @@
 				selectedIndex++;
 				break;
 
-			case 'Escape':
-				NavigationAPI.Tree();
-				break;
-
 			case 'Enter':
 				addElement(selectedIndex);
 		}
@@ -56,7 +50,6 @@
 </script>
 
 <div class="panel" on:focus={() => NavigationAPI.Search()}>
-	{desc}
 	<input
 		class="searchbar"
 		bind:this={searchBar}

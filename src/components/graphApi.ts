@@ -152,4 +152,65 @@ export class GraphApi {
             return ls
         })
     }
+
+    private deduplicateIds(array: string[]) {
+        return array.filter((value, index) => array.indexOf(value) === index)
+    }
+
+    private nodeParents(id: string) {
+        const arr = get(this.arrows).filter(a => a.toId == id)
+
+        return this.deduplicateIds(arr.map(a => a.fromId))
+    }
+
+    private nodeChildren(id: string) {
+        const arr = get(this.arrows).filter(a => a.fromId == id)
+
+        return this.deduplicateIds(arr.map(a => a.toId))
+    }
+
+    public upArrow() {
+        const [currentId, ..._] = get(GraphApi.selectedIds)
+        const parents = this.nodeParents(currentId)
+        if (parents.length) {
+            GraphApi.selectedIds.set([parents[0]])
+        }
+    }
+    public downArrow() {
+        const [currentId, ..._] = get(GraphApi.selectedIds)
+        const children = this.nodeChildren(currentId)
+        if (children.length) {
+            GraphApi.selectedIds.set([children[0]])
+        }
+    }
+
+    public leftArrow() {
+        const [currentId, ..._] = get(GraphApi.selectedIds)
+        const parentIds = this.nodeParents(currentId)
+        if (!parentIds.length) return
+
+        const relatives = this.nodeChildren(parentIds[0])
+
+        const myIdx = relatives.indexOf(currentId)
+
+        const newIdx = (myIdx - 1 + relatives.length) % relatives.length
+        GraphApi.selectedIds.set([
+            relatives[newIdx],
+        ])
+
+    }
+    public rightArrow() {
+        const [currentId, ..._] = get(GraphApi.selectedIds)
+        const parentIds = this.nodeParents(currentId)
+        if (!parentIds.length) return
+
+        const relatives = this.nodeChildren(parentIds[0])
+
+        const myIdx = relatives.indexOf(currentId)
+
+        const newIdx = (myIdx + 1) % relatives.length
+        GraphApi.selectedIds.set([
+            relatives[newIdx],
+        ])
+    }
 }

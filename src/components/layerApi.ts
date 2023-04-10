@@ -2,7 +2,8 @@ import { get, writable } from 'svelte/store'
 import layers from '../layers.json'
 import type { ILayer } from './types'
 import type { GraphApi } from './graphApi'
-import { NavigationAPI, activeBlock, graphApi } from './state'
+import { graphApi } from './state'
+import { NavigationAPI } from "./NavigationAPI"
 
 
 
@@ -72,7 +73,6 @@ class LayerApi {
         })
 
         pendingBlock.set(undefined)
-        // activeBlock.set("search")
         NavigationAPI.Search()
     }
 

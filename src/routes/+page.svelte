@@ -3,8 +3,7 @@
 	import Params from '../components/Params.svelte';
 	import Tree from '../components/Tree.svelte';
 	import InfoBulle from '../components/InfoBulle.svelte';
-	import { NavigationAPI } from '../components/state';
-
+	import { NavigationAPI } from '../components/NavigationAPI';
 	let width;
 	let height;
 </script>
