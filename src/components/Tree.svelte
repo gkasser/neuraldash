@@ -3,7 +3,7 @@
 	import { Canvas, Layer } from 'svelte-canvas';
 	import { Draw } from './draw';
 	import KLayer from './KLayer.svelte';
-	import { mapOffset, targetLayout } from './state';
+	import { NavigationAPI, mapOffset, targetLayout } from './state';
 
 	export let width: number;
 	export let height: number;
@@ -50,9 +50,18 @@
 			};
 		}
 	};
+
+	export const keyUp = (e: KeyboardEvent) => {
+		console.log(e.key);
+		if (e.key == 'Enter') {
+			NavigationAPI.Search();
+		} else if (e.key == 'e') {
+			NavigationAPI.Params();
+		}
+	};
 </script>
 
-<Canvas {width} {height}>
+<Canvas {width} {height} on:keydown={keyUp}>
 	<Layer {render} />
 </Canvas>
 <div
@@ -61,6 +70,7 @@
 	on:mousedown={mouseDown}
 	on:mouseup={mouseUp}
 	on:mouseout={mouseUp}
+	on:keydown={keyUp}
 >
 	{#each $targetLayout.layers as cl}
 		<KLayer {...cl} dragging={!!dragging} />

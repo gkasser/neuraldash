@@ -14,11 +14,13 @@ export type IEdge = {
     label: string
 }
 
+export type ParamType = "int" | "float" | "string" | "bool" | "tuple" | "Any"
+
 export type ILayer = {
     nodeId: string,
     name: string,
     params: {
-        type: "int" | "float" | "string" | "bool" | "tuple" | "Any"
+        type: ParamType
         name: string
         doc: string
         value: any

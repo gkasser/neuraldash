@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { get, writable } from 'svelte/store'
 import type { Point } from './types'
 import { GraphApi } from './graphApi'
 import layers from '../layers.json'
@@ -17,5 +17,28 @@ export const mapOffset = writable<Point>({
 
 export type panels = 'navigation' | 'params' | 'search'
 
-export const activeBlock = writable<{ position: panels }>({ position: 'navigation' })
+export const activeBlock = writable<panels>('navigation')
 
+export class NavigationAPI {
+    public static Tree = () => {
+        activeBlock.set('navigation')
+    }
+
+    public static Search = () => {
+        activeBlock.set('search')
+    }
+
+    public static Params = () => {
+        activeBlock.set('params')
+    }
+
+    public static keyUpListener = (e: KeyboardEvent) => {
+        console.log(e.key)
+
+        switch (get(activeBlock)) {
+            case "navigation":
+                break
+        }
+
+    }
+}

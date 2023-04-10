@@ -2,7 +2,7 @@ import { get, writable } from 'svelte/store'
 import layers from '../layers.json'
 import type { ILayer } from './types'
 import type { GraphApi } from './graphApi'
-import { activeBlock, graphApi } from './state'
+import { NavigationAPI, activeBlock, graphApi } from './state'
 
 
 
@@ -72,7 +72,8 @@ class LayerApi {
         })
 
         pendingBlock.set(undefined)
-        activeBlock.set({ position: "search" })
+        // activeBlock.set("search")
+        NavigationAPI.Search()
     }
 
     private validatePendingLayer(): boolean {

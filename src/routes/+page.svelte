@@ -2,6 +2,8 @@
 	import SearchPanel from '../components/Search.svelte';
 	import Params from '../components/Params.svelte';
 	import Tree from '../components/Tree.svelte';
+	import InfoBulle from '../components/InfoBulle.svelte';
+	import { NavigationAPI } from '../components/state';
 
 	let width;
 	let height;
@@ -12,11 +14,12 @@
 	<meta name="description" content="Think Fast !" />
 </svelte:head>
 
+<svelte:window on:keyup={NavigationAPI.keyUpListener} />
 <div bind:clientWidth={width} bind:clientHeight={height}>
 	<SearchPanel />
-
 	<Tree {height} {width} />
-	<Params params={['Bordel']} />
+	<Params params={[]} />
+	<InfoBulle />
 </div>
 
 <style>
