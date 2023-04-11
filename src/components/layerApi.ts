@@ -1,13 +1,13 @@
 import { get, writable } from 'svelte/store'
 import layers from '../layers.json'
 import type { ILayer } from './types'
-import type { GraphApi } from './graphApi'
+import { GraphApi } from './graphApi'
 import { graphApi } from './state'
 import { NavigationAPI } from "./NavigationAPI"
 
 
 
-export const pendingBlock = writable<Omit<ILayer, 'nodeId'> | undefined>()
+export const pendingBlock = writable<ILayer | undefined>()
 
 class LayerApi {
     private lastParams
@@ -43,6 +43,7 @@ class LayerApi {
         const last = this.lastParams[layerName]
 
         pendingBlock.set({
+            nodeId: GraphApi.getId(),
             name: layerName,
             params: last.params.map((param) => {
                 return {
@@ -53,14 +54,13 @@ class LayerApi {
                 }
             })
         })
-
-
-        if (layers[layerName].params.length == 0) {
-            this.addPendinglayer()
-        }
     }
 
-    public addPendinglayer() {
+    public editSelectedLayer(layerId: string) {
+
+    }
+
+    public savePendinglayer() {
         const pending = get(pendingBlock)!
 
         if (!this.validatePendingLayer()) {

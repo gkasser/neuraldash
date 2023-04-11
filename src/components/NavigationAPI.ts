@@ -41,6 +41,7 @@ export class NavigationAPI {
         const newBlock = get(pendingBlock)
         switch (e.key) {
             case "Escape":
+                pendingBlock.set(undefined)
                 this.Search()
                 break
             case "Enter":

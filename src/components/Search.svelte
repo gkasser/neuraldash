@@ -77,17 +77,19 @@
 		width: 200px;
 		background-color: var(--bg-100);
 		padding: 15px;
-		border-radius: 7px;
+		border-radius: 2px;
 		border: solid 1px #ccc;
 		z-index: 10;
+		bottom: 80px;
 	}
 
 	ul {
 		overflow-y: scroll;
-		height: 80vh;
+		height: calc(100% - 40px);
 		font-size: small;
 		list-style-type: none;
 		padding: 0;
+		position: relative;
 	}
 
 	li {

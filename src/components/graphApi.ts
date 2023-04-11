@@ -13,14 +13,14 @@ export class GraphApi {
 
     public static selectedIds = writable<string[]>([])
     private static currentAvailableId = writable<number>(0)
-    private static getId = () => {
+    public static getId = (layer = true) => {
         let id = 0
         GraphApi.currentAvailableId.update(i => {
             id = i
             return i + 1
         })
 
-        return id.toString()
+        return (layer ? "l" : "a") + id.toString()
     }
 
     constructor(
@@ -85,7 +85,7 @@ export class GraphApi {
     }
 
     public addLayerAfter(newLayer: Omit<ILayer, "nodeId">, connectedLayerId: string): string {
-        const nodeId = `l${GraphApi.getId()}`
+        const nodeId = GraphApi.getId()
         this.layers.update(
             (ls) => {
                 ls.push({ ...newLayer, nodeId })
@@ -102,7 +102,7 @@ export class GraphApi {
     }
 
     public addLayer(layer: Omit<ILayer, "nodeId">): string {
-        const nodeId = `l${GraphApi.getId()}`
+        const nodeId = GraphApi.getId()
         this.layers.update((ls) => {
             ls.push({ ...layer, nodeId })
             return ls
@@ -129,7 +129,7 @@ export class GraphApi {
 
 
     public addArrow(arrow: Omit<IArrow, "edgeId">): string {
-        const edgeId = `a${GraphApi.getId()}`
+        const edgeId = GraphApi.getId(false)
         this.arrows.update((ls) => {
             ls.push({ ...arrow, edgeId })
             return ls
