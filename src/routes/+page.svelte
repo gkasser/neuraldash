@@ -1,17 +1,36 @@
 <script lang="ts">
 	import backbones from '../lib/models/all.json';
 	let fileInput: HTMLInputElement;
-	function handleFileSelect(event: Event) {
+	let selectedName = '';
+
+	const validateJsonFile = (json_content: string) => {
+		console.log(json_content);
+		console.log('Loaded json content, start validation');
+	};
+
+	const handleSelecter = (e: Event & { currentTarget: EventTarget & HTMLSelectElement }) => {
+		selectedName = `/models/${e.currentTarget.value}.json`;
+
+		fetch(selectedName)
+			.then((response) => response.json())
+			.then((data) => {
+				validateJsonFile(data);
+			});
+	};
+
+	function handleFileUpload(event: Event) {
 		const target = event.target as HTMLInputElement;
 		if (!target.files) return;
 		const file = target.files[0];
 		const reader = new FileReader();
 
+		selectedName = file.name;
+
 		reader.onload = function (event) {
 			if (!event.target) return;
 			const contents = event.target.result as string;
 			const jsonData = JSON.parse(contents);
-			console.log(jsonData);
+			validateJsonFile(jsonData);
 		};
 
 		reader.readAsText(file);
@@ -26,8 +45,8 @@
 <div>
 	<h1>NeuralDash</h1>
 	<h2>Create & Edit neural networks</h2>
-	Create a new neural network from a backbone:
-	<select>
+	Create a new neural network from a classic backbone:
+	<select class="selecter" on:change={handleSelecter}>
 		{#each backbones as backbone}
 			<option>{backbone}</option>
 		{/each}
@@ -36,6 +55,7 @@
 	or
 
 	<button
+		class="uploader"
 		on:click={() => {
 			fileInput.click();
 		}}
@@ -48,7 +68,7 @@
 		accept=".json"
 		style="display:none"
 		bind:this={fileInput}
-		on:change={handleFileSelect}
+		on:change={handleFileUpload}
 	/>
 </div>
 
@@ -61,5 +81,21 @@
 		flex: 0.6;
 		height: 100%;
 		width: 100%;
+	}
+
+	.selecter {
+		margin: 35px;
+		height: 45px;
+		width: 225px;
+		text-align: center;
+		font-size: 16px;
+	}
+
+	.uploader {
+		margin: 35px;
+		height: 45px;
+		width: 225px;
+		text-align: center;
+		font-size: 16px;
 	}
 </style>
