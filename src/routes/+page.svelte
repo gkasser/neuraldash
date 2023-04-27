@@ -1,11 +1,17 @@
 <script lang="ts">
+	import { NavigationAPI } from '../components/NavigationAPI';
+	import { graphApi } from '../components/state';
 	import backbones from '../lib/models/all.json';
+
 	let fileInput: HTMLInputElement;
 	let selectedName = '';
 
 	const validateJsonFile = (json_content: string) => {
 		console.log(json_content);
 		console.log('Loaded json content, start validation');
+		graphApi.loadJson(json_content);
+		NavigationAPI.Tree();
+		window.location.href = '/edit';
 	};
 
 	const handleSelecter = (e: Event & { currentTarget: EventTarget & HTMLSelectElement }) => {

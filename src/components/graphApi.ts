@@ -1,6 +1,6 @@
+import dagre from 'dagre'
 import { derived, get, writable } from 'svelte/store'
 import type { IArrow, IDrawArrow, IDrawLayer, ILayer } from './types'
-import dagre from 'dagre'
 
 
 
@@ -77,6 +77,54 @@ export class GraphApi {
             name: "Conv2D",
             params: []
         }, id1)
+    }
+
+    public loadJson(modelJson: any) {
+        const [layers, arrows] = GraphApi.parseKerasModel(modelJson)
+        this.layers.set(layers)
+        this.arrows.set(arrows)
+    }
+
+    public static parseKerasModel(model: any): [ILayer[], IArrow[]] {
+        const layers: ILayer[] = []
+        const arrows: IArrow[] = []
+        const layerIds: { [id: string]: boolean } = {}
+
+        model.config.layers.forEach((layer) => {
+            const layerId = layer.name
+
+            if (!layerIds[layerId]) {
+                const inputIds: string[] = layer.inbound_nodes
+                    .map((node) => node.inbound_layers)
+                    .flat()
+                    .map((inputLayer) => inputLayer.name)
+
+                inputIds.forEach((inputId) => {
+                    arrows.push({
+                        edgeId: `${inputId}-${layerId}`,
+                        fromId: inputId,
+                        toId: layerId,
+                    })
+                })
+
+                layers.push({
+                    nodeId: layerId,
+                    // name: layer.name,
+                    // type: layer.constructor.name,
+                    name: layer.constructor.name,
+                    // inputIds: inputIds,
+                    // outputIds: layer.outbound_nodes
+                    //     .map((node) => node.outbound_layers)
+                    //     .flat()
+                    //     .map((outputLayer) => outputLayer.name),
+                    params: layer.config,
+                })
+
+                layerIds[layerId] = true
+            }
+        })
+
+        return [layers, arrows]
     }
 
     public addLayerAfterCurrent(newLayer: Omit<ILayer, "nodeId">): string {

@@ -15,6 +15,7 @@ export type IEdge = {
 }
 
 export type ParamType = "int" | "float" | "string" | "bool" | "tuple" | "Any"
+// type ParamType = "string" | "number" | "boolean" | "array" | "object";
 
 export type ILayer = {
     nodeId: string,
@@ -31,6 +32,14 @@ export type IArrow = {
     edgeId: string,
     fromId: string,
     toId: string,
+}
+
+
+export type IConnection = {
+    fromNodeId: string,
+    fromPortId: string,
+    toNodeId: string,
+    toPortId: string
 }
 
 
